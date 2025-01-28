@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import dayjs from "dayjs";
 
 const expenseSchema = new Schema(
     {
@@ -22,7 +23,7 @@ const expenseSchema = new Schema(
         },
         date: {
             type: Date,
-            default: Date.now,
+            default: new Date().toISOString().split('T')[0],
         },
         paymentMethod: {
             type: String,
