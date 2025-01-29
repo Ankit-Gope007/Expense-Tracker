@@ -4,10 +4,11 @@ import {
     getExpenseByCategory,
     getExpenseByDate,
     getExpenseByPaymentMethod,
-    getExpenseByUser,
+    getExpenseByProfile,
     updateExpense,
     deleteExpense,
-    getExpenseByMonth
+    getExpenseByMonth,
+    getExpenseById
 } from "../controllers/Expense.controller.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -17,10 +18,11 @@ router.route("/create").post(verifyJWT,createExpense);
 router.route("/category").post(verifyJWT,getExpenseByCategory);
 router.route("/date").post(verifyJWT,getExpenseByDate);
 router.route("/paymentMethod").post(verifyJWT,getExpenseByPaymentMethod);
-router.route("/user").get(verifyJWT,getExpenseByUser);
+router.route("/user").get(verifyJWT,getExpenseByProfile);
 router.route("/update").patch(verifyJWT,updateExpense);
-router.route("/delete").delete(verifyJWT,deleteExpense);
+router.route("/delete").post(deleteExpense);
 router.route("/month").post(verifyJWT,getExpenseByMonth);
+router.route("/expense").post(verifyJWT,getExpenseById);
 
 
 export default router

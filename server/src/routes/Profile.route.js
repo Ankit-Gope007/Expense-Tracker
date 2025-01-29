@@ -4,7 +4,7 @@ import {
     loginUser,
     getCurrentUserProfile,
     logoutUser,
-} from "../controllers/User.controller.js"
+} from "../controllers/Profile.controller.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()

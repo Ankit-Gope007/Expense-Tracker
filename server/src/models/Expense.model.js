@@ -3,9 +3,9 @@ import dayjs from "dayjs";
 
 const expenseSchema = new Schema(
     {
-        user: {
+        profile: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Profile',
             required: true,
         },
         title: {

@@ -2,9 +2,9 @@ import mongoose, { Schema } from "mongoose";
 
 const budgetSchema = new Schema(
     {
-        user: {
+        profile: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Profile',
             required: true,
         },
         amount: {
