@@ -56,12 +56,14 @@ const page = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
-        const exp_response = await axios.patch(UPDATE_EXPENSE_ROUTE, formData, { withCredentials: true })
-        // console.log(exp_response.data.data)
-        if (exp_response.data.success) {
-            toast.success("Expense Updated Successfully")
-            router.push('/latestExpense')
+        if (handleFormValidation()) {
+            console.log(formData)
+            const exp_response = await axios.patch(UPDATE_EXPENSE_ROUTE, formData, { withCredentials: true })
+            // console.log(exp_response.data.data)
+            if (exp_response.data.success) {
+                toast.success("Expense Updated Successfully")
+                router.push('/latestExpense')
+            }
         }
     }
     useEffect(() => {
@@ -69,15 +71,20 @@ const page = () => {
         console.log(Id)
     }, [])
 
- 
+
     const getProfile = async () => {
-        const response = await axios.get(GET_PROFILE_ROUTE, { withCredentials: true })
-        setName(response.data.data.profile.name.split(' ')[0])
+        try {
+            const response = await axios.get(GET_PROFILE_ROUTE, { withCredentials: true })
+            setName(response.data.data.profile.name.split(' ')[0])
+          } catch (error) {
+            toast.error("Unauthorized Actions Detected Please login to continue")
+            router.push('/')
+          }
         const exp_response = await axios.get(GET_EXPENSES_ROUTE, { withCredentials: true })
         setTotalSpent(exp_response.data.message.total)
         formData.expenseId = Id
 
-        const { data } = await axios.post(GET_EXPENSE_BY_ID_ROUTE, {expenseId:Id}, { withCredentials: true });
+        const { data } = await axios.post(GET_EXPENSE_BY_ID_ROUTE, { expenseId: Id }, { withCredentials: true });
         setFormData({
             expenseId: data.data.expense._id,
             title: data.data.expense.title,
@@ -88,16 +95,41 @@ const page = () => {
             notes: data.data.expense.notes
         });
     }
+
+    const handleFormValidation = () => {
+        if (formData.title === "") {
+            toast.error("Title is required")
+            return false
+        }
+        if (formData.amount === "") {
+            toast.error("Amount is required")
+            return false
+        }
+        if (formData.date === "") {
+            toast.error("Date is required")
+            return false
+        }
+        if (formData.paymentMethod === "") {
+            toast.error("Payment Method is required")
+            return false
+        }
+        if (formData.category === "") {
+            toast.error("Category is required")
+            return false
+        }
+        return true
+    }
+
     const hanndleLatestExpense = () => {
         router.push('/latestExpense')
     }
 
     const handleAddExpense = () => {
         router.push('/home')
-      }
-      const handleMonth = () => {
+    }
+    const handleMonth = () => {
         router.push('/month')
-      }
+    }
     const handleLatestExpense = () => {
         router.push('/latestExpense')
     }
@@ -113,18 +145,18 @@ const page = () => {
                             <h1 className='text-5xl font-bold'>₹ {totalSpent}</h1>
                         </div>
                         <div className='flex-col  flex-wrap mt-5'>
-              {/* <div className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[43%] rounded-xl flex justify-center items-center'>By category</div> */}
-              <div className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[90%] rounded-xl flex justify-center items-center'
-              onClick={handleLatestExpense}
-              >Latest expense</div>
-              {/* <div 
+                            {/* <div className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[43%] rounded-xl flex justify-center items-center'>By category</div> */}
+                            <div className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[90%] rounded-xl flex justify-center items-center'
+                                onClick={handleLatestExpense}
+                            >Latest expense</div>
+                            {/* <div 
               onClick={handleMonth}
               className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[43%] rounded-xl flex justify-center items-center'>By month</div> */}
-              <div 
-              onClick={handleAddExpense}
-              className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[90%] rounded-xl flex justify-center items-center'>Add Expense</div>
+                            <div
+                                onClick={handleAddExpense}
+                                className='bg-gray-300 text-white font-bold cursor-pointer text-xl hover:bg-gray-400 m-2 h-[90px] w-[90%] rounded-xl flex justify-center items-center'>Add Expense</div>
 
-            </div>
+                        </div>
                     </div>
                     <div className='h-[90%] bg-gray-200 shadow-xl w-[55%] rounded-xl'>
                         <div className='flex flex-col justify-center items-center'>
